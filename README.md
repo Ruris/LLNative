@@ -22,7 +22,7 @@ pod 'LLNative'
 
 ## Author
 
-Ruris, ruris@qq.com
+ZHK1024, ZHK1024@foxmail.com
 
 ## License
 
