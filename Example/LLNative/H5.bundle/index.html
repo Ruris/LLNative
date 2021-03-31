@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1 user-scalable=0">
+        <style>
+            h5 {
+                height: 0.2em;
+            }
+        </style>
+        <script type="text/javascript">
+            function setupWKWebViewJavascriptBridge(callback) {
+                if (window.WKWebViewJavascriptBridge) { return callback(WKWebViewJavascriptBridge); }
+                if (window.WKWVJBCallbacks) { return window.WKWVJBCallbacks.push(callback); }
+                window.WKWVJBCallbacks = [callback];
+                window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
+            }
+            
+            setupWKWebViewJavascriptBridge(function(bridge) {
+                /* Initialize your app here */
+                bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+                    console.log('iOS called testJavascriptHandler with', data)
+                    responseCallback({ 'Javascript Says':'Right back atcha!' })
+                })
+
+                // bridge.callHandler('setStorage', {'foo': 'bar'}, function(response) {
+                //     console.log('JS got response', response)
+                // })
+                window.bridge = bridge
+            })
+  
+            function call(name, data) {
+                bridge.callHandler(name, {"data": data}, function(responseData) {
+                    document.getElementById('result').innerHTML = JSON.stringify(responseData)
+                })
+            }
+
+            function fileUpload() {
+                var files = document.getElementById('file')
+                display(document.getElementById('file').files.length)
+                if (files.length <= 0) {
+                    // call("showToast", {'title' : '请选择文件', 'duration' : 1.0})
+                    display(document.getElementById('result').innerHTML += '请选择文件')
+                    return
+                }
+                var reader = new FileReader()
+                reader.readAsDataURL(files[0])
+                reader.onloadend = function(reader) {
+                    var url = reader.target.result
+                    // call('showModel', {'title' : '文件路径', 'content' : url})
+                    display("url")
+                }
+            }
+
+            function display(content) {
+                document.getElementById('result').innerHTML = content
+            }
+
+        </script>
+    </head>
+    <body>
+        <h1>Storage</h1>
+        <button onclick="call('setStorage', {'key': 'name','value': {'address':'123', 'time' : new Date()}});">setStorage</button>
+        <button onclick="call('removeStorage', {'key': 'name'});">removeStorage</button>
+        <button onclick="call('getStorage', {'key': 'name'});">getStorage</button>
+        <button onclick="call('clearStorage', function() {  });">clearStorage</button>
+
+        <hr>
+        <h1>Device</h1>
+        <h5>电池</h5>
+        <button onclick="call('getBatteryInfo');">getBatteryInfo</button>
+        <h5>剪切板</h5>
+        <button onclick="call('setClipboardData', {'data': 'jim'})">setClipboardData</button>
+        <button onclick="call('getClipboardData')">getClipboardData</button>
+        <h5>屏幕亮度</h5>
+        <button onclick="call('setScreenBrightness', {'value': 0.3})">setScreenBrightness(0.3)</button>
+        <button onclick="call('setScreenBrightness', {'value': 0.5})">setScreenBrightness(0.5)</button>
+        <button onclick="call('setScreenBrightness', {'value': 0.8})">setScreenBrightness(0.8)</button>
+        <button onclick="call('getScreenBrightness')">getScreenBrightness</button>
+        <button onclick="call('setKeepScreenOn', {'keepScreenOn' : false})">setKeepScreenOn(false)</button>
+        <button onclick="call('setKeepScreenOn', {'keepScreenOn' : true})">setKeepScreenOn(true)</button>
+        <h5>震动</h5>
+        <button onclick="call('vibrateShort', {'type' : 'light'})">vibrateShort(light)</button>
+        <button onclick="call('vibrateShort', {'type' : 'medium'})">vibrateShort(medium)</button>
+        <button onclick="call('vibrateShort', {'type' : 'heavy'})">vibrateShort(heavy)</button>
+        <button onclick="call('vibrateLong', {'type' : 'heavy'})">vibrateLong</button>
+        <h5>扫码</h5>
+        <button onclick="call('scanCode', {'onlyFromCamera' : false, 'scanType' : ['qrCode', 'barCode']})">scanCode</button>
+        <hr>
+        <h5>交互</h5>
+        <button onclick="call('showToast', {'title' : 'showToast', 'duration' : 1.0, 'icon' : 'success'})">showToast</button>
+        <button onclick="call('showModal', {'title' : '弹窗', 'content' : '请选择', 'cancelText' : '取消', 'cancelColor': '#00ff00', 'confirmText' : '确定', 'confirmColor' : '#ff0000'})">showModal</button>
+        <button onclick="call('showActionSheet', {'alertText' : 'ActionSheet', 'cancelText' : '取消', 'cancelColor' : '#5c7a29', 'itemList' : ['选择 1', '选择 2', '选择 3'], 'itemColor' : '#f15b6c'})">showActionSheet</button>
+        <button onclick="call('showToast', {'title' : undefined, 'duration' : 1.0})">Alert</button>
+
+        <hr>
+        <h5>文件</h5>
+       
+        <hr>
+        <h5>Log</h5>
+        <div id='result'></div>
+    </body>
+</html>

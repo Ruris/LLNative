@@ -1,0 +1,6 @@
+framework module LLNative {
+  umbrella header "LLNative-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -24,11 +24,15 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/Ruris/LLNative'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Ruris' => 'ruris@qq.com' }
-  s.source           = { :git => 'https://github.com/Ruris/LLNative.git', :tag => s.version.to_s }
+  s.author           = { 'ZHK1024' => 'ZHK1024@qq.com' }
+  s.source           = { :git => 'https://github.com/ZHK1024/LLNative.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
+  
+  s.swift_version = '5.0'
+  
+  s.static_framework = true
 
   s.source_files = 'LLNative/Classes/**/*'
   
@@ -39,4 +43,12 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  
+  s.dependency 'WKWebViewJavascriptBridge'
+#  s.dependency 'coswift'
+  s.dependency 'PromiseKit/CorePromise'
+  s.dependency 'QMUIKit'
+  s.dependency 'LBXScan/LBXNative'
+  s.dependency 'LBXScan/UI'
+  s.dependency 'SQLite.swift'
 end
